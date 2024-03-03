@@ -1,0 +1,3 @@
+﻿  RubikDataStructure.cpp
+C:\Users\vilja\Desktop\RubikDataStructure\RubikDataStructure.cpp(225): warning C4715: 'Rubik::get_face': not all control paths return a value
+  RubikDataStructure.vcxproj -> C:\Users\vilja\Desktop\RubikDataStructure\x64\Debug\RubikDataStructure.exe
