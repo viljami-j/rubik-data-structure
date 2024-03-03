@@ -60,6 +60,9 @@ public:
 				return;
 			}
 
+			bool is_x_rot = false;
+			bool is_y_rot = false;
+
 			// Apply rots
 			switch (rot_axis)
 			{
@@ -67,27 +70,61 @@ public:
 				// This should never happen
 				break;
 			case Rubik::Xpos:
+				is_x_rot = true;
 				if (line == 1) positive_rotate(x1);
 				if (line == 2) positive_rotate(x2);
 				if (line == 3) positive_rotate(x3);
 				break;
 			case Rubik::Xneg:
+				is_x_rot = true;
 				if (line == 1) negative_rotate(x1);
 				if (line == 2) negative_rotate(x2);
 				if (line == 3) negative_rotate(x3);
 				break;
 			case Rubik::Ypos:
+				is_y_rot = true;
 				if (line == 1) positive_rotate(y1);
 				if (line == 2) positive_rotate(y2);
 				if (line == 3) positive_rotate(y3);
 				break;
 			case Rubik::Yneg:
+				is_y_rot = true;
 				if (line == 1) negative_rotate(y1);
 				if (line == 2) negative_rotate(y2);
 				if (line == 3) negative_rotate(y3);
 				break;
 			default:
 				break;
+			}
+
+			// If we did an X operation, rewrite Y perspective to make Front 'F' match in both xA & yA perspectives/interpretations.
+			// If we did an Y operation, vice versa.
+			if (is_x_rot) {
+				y1[3] = x1[3];
+				y2[3] = x1[4];
+				y3[3] = x1[5];
+
+				y1[4] = x2[3];
+				y2[4] = x2[4];
+				y3[4] = x2[5];
+
+				y1[5] = x3[3];
+				y2[5] = x3[4];
+				y3[5] = x3[5];
+			}
+
+			if (is_y_rot) {
+				x1[3] = y1[3];
+				x1[4] = y2[3];
+				x1[5] = y3[3];
+
+				x2[3] = y1[4];
+				x2[4] = y2[4];
+				x2[5] = y3[4];
+
+				x3[3] = y1[5];
+				x3[4] = y2[5];
+				x3[5] = y3[5];
 			}
 		}
 	};
@@ -109,11 +146,11 @@ private:
 		deque.pop_back();
 		deque.push_front(popped);
 
-		popped = deque.back();   // Positive Rotate (x+: right rotate, y+: down rotate)
+		popped = deque.back();               // Positive Rotate (x+: right rotate, y+: down rotate)
 		deque.pop_back();
 		deque.push_front(popped);
 
-		popped = deque.back();   // Positive Rotate (x+: right rotate, y+: down rotate)
+		popped = deque.back();               // Positive Rotate (x+: right rotate, y+: down rotate)
 		deque.pop_back();
 		deque.push_front(popped);
 	}
@@ -122,11 +159,11 @@ private:
 		deque.pop_front();
 		deque.push_back(popped2);
 
-		popped2 = deque.front(); // Negative Rotate (x-: left rotate, y-: up rotate)
+		popped2 = deque.front();             // Negative Rotate (x-: left rotate, y-: up rotate)
 		deque.pop_front();
 		deque.push_back(popped2);
 
-		popped2 = deque.front(); // Negative Rotate (x-: left rotate, y-: up rotate)
+		popped2 = deque.front();             // Negative Rotate (x-: left rotate, y-: up rotate)
 		deque.pop_front();
 		deque.push_back(popped2);
 	}
@@ -326,9 +363,9 @@ int main()
 	Rubik rubik;
 	rubik.print_state();
 
-	rubik.rotate(Rubik::RotAxis::Xpos, 1); // positiivinen -> vastap‰iv‰‰n
-	rubik.rotate(Rubik::RotAxis::Xpos, 2);
-	rubik.rotate(Rubik::RotAxis::Xpos, 3);
+	rubik.rotate(Rubik::RotAxis::Ypos, 1); // positiivinen -> vastap‰iv‰‰n
+	rubik.rotate(Rubik::RotAxis::Ypos, 2);
+	rubik.rotate(Rubik::RotAxis::Ypos, 3);
 
 	std::cout << std::endl;
 	rubik.print_state();
